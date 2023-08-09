@@ -1,27 +1,38 @@
 <script setup>
 import * as PIXI from "pixi.js";
+import ImgBunny from "./assets/bunny.png";
 
 // 创建应用
 const app = new PIXI.Application({
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#FA541C',
+  backgroundColor: "lightblue",
   resolution: window.devicePixelRatio || 1,
 });
 
 // 挂载元素
 document.body.appendChild(app.view);
 
-// 创建一个矩形
-const rect = new PIXI.Graphics();
-rect.beginFill(0x66ccff); 
-rect.drawRect(200, 200, 400, 300);
-rect.endFill();
+// 创建一个纹理
+const texture = PIXI.Texture.from(ImgBunny);
 
-// 矩形添加到舞台
-app.stage.addChild(rect);
+// 创建一个精灵
+const sprite = new PIXI.Sprite(texture);
 
+// 设置精灵位置
+sprite.x = app.screen.width / 2;
+sprite.y = app.screen.height / 2;
 
+// 精灵旋转 45度
+// sprite.rotation = Math.PI / 4;
+
+// ticker 实现动画
+const ticker = PIXI.Ticker.shared;
+ticker.add((delta) => {
+  sprite.rotation += 0.01 * delta;
+});
+
+app.stage.addChild(sprite);
 </script>
 
 <template>
