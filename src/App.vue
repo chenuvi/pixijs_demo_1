@@ -1,6 +1,10 @@
 <script setup>
   import * as PIXI from "pixi.js"
-  import ImgBunny from "./assets/bunny.png"
+
+  // 本地图片转 URl
+  function getImageUrl(name) {
+    return new URL(`./assets/${name}.png`, import.meta.url).href
+  }
 
   // 创建应用
   const app = new PIXI.Application({
@@ -13,59 +17,40 @@
   // 挂载元素
   document.body.appendChild(app.view)
 
-  // 创建一个纹理
-  const texture = PIXI.Texture.from(ImgBunny)
-
-  // 创建一个精灵
-  const sprite = new PIXI.Sprite(texture)
-
-  // 设置精灵位置
-  sprite.x = app.screen.width / 2
-  sprite.y = app.screen.height / 2
-
-  // 精灵旋转 45度
-  // sprite.rotation = Math.PI / 4;
-
-  // ticker 实现动画
-  const ticker = PIXI.Ticker.shared
-  ticker.add((delta) => {
-    sprite.rotation += 0.01 * delta
+  // 添加创景1的资源
+  PIXI.Assets.addBundle("scene1", {
+    bunny: getImageUrl("bunny"),
+    user: getImageUrl("user"),
+    video: getImageUrl("video"),
+  })
+  const texturesPromise = PIXI.Assets.loadBundle("scene1", (progress) => {
+    console.log("progress: ", progress)
+    console.log("资源加载完毕")
   })
 
-  // 给精灵添加点击事件
-  sprite.interactive = true
-  sprite.on("click", () => {
-    console.log("click")
+  // 添加图片资源
+  // PIXI.Assets.add("bunny", getImageUrl("bunny"))
+  // PIXI.Assets.add("user", getImageUrl("user"))
+  // PIXI.Assets.add("video", getImageUrl("video"))
+
+  // 异步加载资源
+  // const texturesPromise = PIXI.Assets.load(["bunny", "user", "video"])
+
+  texturesPromise.then((textures) => {
+    // 创建一个容器
+    const container = new PIXI.Container()
+
+    const spriteBunny = new PIXI.Sprite(textures["bunny"])
+    // 设置精灵位置
+    spriteBunny.x = app.screen.width / 2
+    spriteBunny.y = app.screen.height / 2
+    // 缩放精灵
+    container.addChild(spriteBunny)
+
+    const spriteUser = new PIXI.Sprite(textures["user"])
+    container.addChild(spriteUser)
+    app.stage.addChild(container)
   })
-
-  // 精灵添加鼠标移入事件
-  sprite.on("pointerenter", () => {
-    console.log("pointerenter")
-    sprite.alpha = 1
-  })
-
-  // 精灵添加鼠标移出事件
-  sprite.on("pointerout", () => {
-    console.log("pointerout")
-    sprite.alpha = 0.5
-  })
-
-  app.stage.addChild(sprite)
-
-  app.stage.addChild(sprite)
-
-  // 绘制一个圆形
-  const circle = new PIXI.Graphics()
-  circle.beginFill(0x00ff00)
-  circle.drawCircle(100, 100, 32)
-  circle.endFill()
-
-  // 给圆形添加点击事件
-  circle.interactive = true
-  circle.on("click", () => {
-    console.log("circle click")
-  })
-  app.stage.addChild(circle)
 </script>
 
 <template>
