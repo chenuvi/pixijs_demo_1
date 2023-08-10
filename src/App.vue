@@ -5,7 +5,7 @@ import * as PIXI from "pixi.js";
 const app = new PIXI.Application({
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#FA541C',
+  backgroundColor: 'lightblue',
   resolution: window.devicePixelRatio || 1,
 });
 
@@ -14,7 +14,7 @@ document.body.appendChild(app.view);
 
 // 创建一个矩形
 const rect = new PIXI.Graphics();
-rect.beginFill(0x66ccff); 
+rect.beginFill(0x66ccff);
 rect.drawRect(200, 200, 400, 300);
 rect.endFill();
 
